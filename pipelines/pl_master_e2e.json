@@ -1,0 +1,87 @@
+{
+    "name": "pl_master_e2e",
+    "objectId": "8315413a-bd25-42c7-a0e0-efcd1756b219",
+    "properties": {
+        "activities": [
+            {
+                "name": "Run_Bronze_Ingestion",
+                "type": "InvokePipeline",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "waitOnCompletion": true,
+                    "operationType": "InvokeFabricPipeline",
+                    "pipelineId": "bbb4a13b-c36c-4430-abcb-19ebf84abcaa",
+                    "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a"
+                },
+                "externalReferences": {
+                    "connection": "1a498c54-a1a6-41a6-99a2-ef24a21b596e"
+                }
+            },
+            {
+                "name": "Run_Silver_Transform",
+                "type": "InvokePipeline",
+                "dependsOn": [
+                    {
+                        "activity": "Run_Bronze_Ingestion",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "waitOnCompletion": true,
+                    "operationType": "InvokeFabricPipeline",
+                    "pipelineId": "9ff1e6ef-60a8-4814-abe6-84037f8553f9",
+                    "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a"
+                },
+                "externalReferences": {
+                    "connection": "1a498c54-a1a6-41a6-99a2-ef24a21b596e"
+                }
+            },
+            {
+                "name": "Run_Gold_Warehouse",
+                "type": "InvokePipeline",
+                "dependsOn": [
+                    {
+                        "activity": "Run_Silver_Transform",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "waitOnCompletion": true,
+                    "operationType": "InvokeFabricPipeline",
+                    "pipelineId": "3d6bd3dd-30f9-4346-b1f9-e0b1b0fb7fbf",
+                    "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a"
+                },
+                "externalReferences": {
+                    "connection": "1a498c54-a1a6-41a6-99a2-ef24a21b596e"
+                }
+            }
+        ],
+        "lastModifiedByObjectId": "04603a60-6b90-45d4-8e83-616ed8be73a1",
+        "lastPublishTime": "2026-11-19T19:41:14Z"
+    }
+}
