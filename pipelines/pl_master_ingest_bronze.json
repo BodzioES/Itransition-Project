@@ -1,0 +1,103 @@
+{
+    "name": "pl_master_ingest_bronze",
+    "objectId": "bbb4a13b-c36c-4430-abcb-19ebf84abcaa",
+    "properties": {
+        "activities": [
+            {
+                "name": "Invoke_NYC_Taxi",
+                "type": "InvokePipeline",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "waitOnCompletion": true,
+                    "operationType": "InvokeFabricPipeline",
+                    "pipelineId": "f3bdcf2d-6eea-486e-8cbd-6d4b392b9466",
+                    "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a"
+                },
+                "externalReferences": {
+                    "connection": "1a498c54-a1a6-41a6-99a2-ef24a21b596e"
+                }
+            },
+            {
+                "name": "Run_OpenAQ_Ingest",
+                "type": "TridentNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "Invoke_NYC_Taxi",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "notebookId": "ff94aa29-a4c7-4d3b-9c30-ec74c1212f06",
+                    "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a",
+                    "sessionTag": "silver_batch"
+                }
+            },
+            {
+                "name": "Run_GDP_Ingest",
+                "type": "TridentNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "Run_OpenAQ_Ingest",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "notebookId": "a4abb9c2-6b41-451d-94b7-e5c15b063611",
+                    "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a",
+                    "sessionTag": "silver_batch"
+                }
+            },
+            {
+                "name": "Run_FX_Ingest",
+                "type": "TridentNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "Run_GDP_Ingest",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "notebookId": "25eaff81-c51e-422f-8fb2-a03d49a5cf9e",
+                    "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a",
+                    "sessionTag": "silver_batch"
+                }
+            }
+        ],
+        "lastModifiedByObjectId": "04603a60-6b90-45d4-8e83-616ed8be73a1",
+        "lastPublishTime": "2026-11-19T19:40:38Z"
+    }
+}
