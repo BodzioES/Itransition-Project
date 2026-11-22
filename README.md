@@ -15,7 +15,7 @@ The platform follows a three-tier **Medallion Architecture** orchestrated end-to
 ### Execution & Resource Optimization
 All Bronze-layer ingestion notebooks share a single Spark session attached to the default `Lakehouse_Silver` and write Delta tables directly to physical **ABFS paths** inside `Lakehouse_Bronze`. This architectural choice eliminates multi-session startup overhead and prevents capacity throttling errors (*HTTP 430*).
 
-![Data Lineage](lineage.png)
+![Data Lineage](data-itransition.png)
 
 ---
 
