@@ -1,0 +1,76 @@
+{
+    "name": "pl_ingest_nyc_taxi",
+    "objectId": "f3bdcf2d-6eea-486e-8cbd-6d4b392b9466",
+    "properties": {
+        "activities": [
+            {
+                "name": "Copy data1",
+                "type": "Copy",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "source": {
+                        "type": "BinarySource",
+                        "storeSettings": {
+                            "type": "HttpReadSettings",
+                            "requestMethod": "GET"
+                        },
+                        "formatSettings": {
+                            "type": "BinaryReadSettings"
+                        },
+                        "datasetSettings": {
+                            "annotations": [],
+                            "type": "Binary",
+                            "typeProperties": {
+                                "location": {
+                                    "type": "HttpServerLocation"
+                                }
+                            },
+                            "externalReferences": {
+                                "connection": "ababe419-dace-4172-82e6-fc2bb757cc59"
+                            }
+                        }
+                    },
+                    "sink": {
+                        "type": "BinarySink",
+                        "storeSettings": {
+                            "type": "LakehouseWriteSettings"
+                        },
+                        "datasetSettings": {
+                            "annotations": [],
+                            "linkedService": {
+                                "name": "Lakehouse_Bronze",
+                                "properties": {
+                                    "annotations": [],
+                                    "type": "Lakehouse",
+                                    "typeProperties": {
+                                        "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a",
+                                        "artifactId": "33b93b7e-0899-43c6-81a8-654bc740aa32",
+                                        "rootFolder": "Files"
+                                    }
+                                }
+                            },
+                            "type": "Binary",
+                            "typeProperties": {
+                                "location": {
+                                    "type": "LakehouseLocation",
+                                    "fileName": "yellow_tripdata_2024-01.parquet",
+                                    "folderPath": "nyc_taxi"
+                                }
+                            }
+                        }
+                    },
+                    "enableStaging": false
+                }
+            }
+        ],
+        "lastModifiedByObjectId": "04603a60-6b90-45d4-8e83-616ed8be73a1",
+        "lastPublishTime": "2026-11-09T20:52:22Z"
+    }
+}
