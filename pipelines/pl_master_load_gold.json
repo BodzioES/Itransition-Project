@@ -1,0 +1,71 @@
+{
+    "name": "pl_master_load_gold",
+    "objectId": "3d6bd3dd-30f9-4346-b1f9-e0b1b0fb7fbf",
+    "properties": {
+        "activities": [
+            {
+                "name": "Load_Gold_Dimensions",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "storedProcedureName": "[dbo].[usp_load_gold_dimensions]"
+                },
+                "linkedService": {
+                    "name": "UrbanAnalyticsWarehouse",
+                    "properties": {
+                        "annotations": [],
+                        "type": "DataWarehouse",
+                        "typeProperties": {
+                            "endpoint": "njfa6vrpda7eliulelqwbkvlsm-ylgfsl6w5g2ujdamdpn7d7quri.datawarehouse.fabric.microsoft.com",
+                            "artifactId": "7ff8adbb-fe69-45a9-8544-8b0d058001a2",
+                            "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a"
+                        }
+                    }
+                }
+            },
+            {
+                "name": "Load_Gold_Fact_Taxi",
+                "type": "SqlServerStoredProcedure",
+                "dependsOn": [
+                    {
+                        "activity": "Load_Gold_Dimensions",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "storedProcedureName": "[dbo].[usp_load_gold_fact_taxi]"
+                },
+                "linkedService": {
+                    "name": "UrbanAnalyticsWarehouse",
+                    "properties": {
+                        "annotations": [],
+                        "type": "DataWarehouse",
+                        "typeProperties": {
+                            "endpoint": "njfa6vrpda7eliulelqwbkvlsm-ylgfsl6w5g2ujdamdpn7d7quri.datawarehouse.fabric.microsoft.com",
+                            "artifactId": "7ff8adbb-fe69-45a9-8544-8b0d058001a2",
+                            "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a"
+                        }
+                    }
+                }
+            }
+        ],
+        "lastModifiedByObjectId": "04603a60-6b90-45d4-8e83-616ed8be73a1",
+        "lastPublishTime": "2026-11-17T18:21:58Z"
+    }
+}
