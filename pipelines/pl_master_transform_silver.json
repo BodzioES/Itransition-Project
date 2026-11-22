@@ -1,0 +1,99 @@
+{
+    "name": "pl_master_transform_silver",
+    "objectId": "9ff1e6ef-60a8-4814-abe6-84037f8553f9",
+    "properties": {
+        "activities": [
+            {
+                "name": "Transform_NYC_Taxi",
+                "type": "TridentNotebook",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "notebookId": "5369e46f-6cab-49f9-9b62-8326c4f18a02",
+                    "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a",
+                    "sessionTag": "silver_batch"
+                }
+            },
+            {
+                "name": "Transform_OpenAQ",
+                "type": "TridentNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "Transform_NYC_Taxi",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "notebookId": "f8d768fc-0ca1-4d3f-a4d2-7f9a0df97b38",
+                    "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a",
+                    "sessionTag": "silver_batch"
+                }
+            },
+            {
+                "name": "Transform_GDP",
+                "type": "TridentNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "Transform_OpenAQ",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "notebookId": "1815a3aa-0365-4d25-a9be-9a4d9f7f5c83",
+                    "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a",
+                    "sessionTag": "silver_batch"
+                }
+            },
+            {
+                "name": "Transform_FX",
+                "type": "TridentNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "Transform_GDP",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "notebookId": "5fbd1c16-0371-4599-b7e4-dceb7a1f168e",
+                    "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a",
+                    "sessionTag": "silver_batch"
+                }
+            }
+        ],
+        "lastModifiedByObjectId": "04603a60-6b90-45d4-8e83-616ed8be73a1",
+        "lastPublishTime": "2026-11-16T20:20:48Z"
+    }
+}
