@@ -4,73 +4,104 @@
     "properties": {
         "activities": [
             {
-                "name": "Copy data1",
-                "type": "Copy",
+                "name": "ForEach_Month",
+                "type": "ForEach",
                 "dependsOn": [],
-                "policy": {
-                    "timeout": "0.12:00:00",
-                    "retry": 0,
-                    "retryIntervalInSeconds": 30,
-                    "secureOutput": false,
-                    "secureInput": false
-                },
                 "typeProperties": {
-                    "source": {
-                        "type": "BinarySource",
-                        "storeSettings": {
-                            "type": "HttpReadSettings",
-                            "requestMethod": "GET"
-                        },
-                        "formatSettings": {
-                            "type": "BinaryReadSettings"
-                        },
-                        "datasetSettings": {
-                            "annotations": [],
-                            "type": "Binary",
-                            "typeProperties": {
-                                "location": {
-                                    "type": "HttpServerLocation"
-                                }
-                            },
-                            "externalReferences": {
-                                "connection": "ababe419-dace-4172-82e6-fc2bb757cc59"
-                            }
-                        }
+                    "items": {
+                        "value": "@pipeline().parameters.months_list",
+                        "type": "Expression"
                     },
-                    "sink": {
-                        "type": "BinarySink",
-                        "storeSettings": {
-                            "type": "LakehouseWriteSettings"
-                        },
-                        "datasetSettings": {
-                            "annotations": [],
-                            "linkedService": {
-                                "name": "Lakehouse_Bronze",
-                                "properties": {
-                                    "annotations": [],
-                                    "type": "Lakehouse",
-                                    "typeProperties": {
-                                        "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a",
-                                        "artifactId": "33b93b7e-0899-43c6-81a8-654bc740aa32",
-                                        "rootFolder": "Files"
+                    "isSequential": false,
+                    "activities": [
+                        {
+                            "name": "Copy_NYC_Taxi_Parquet",
+                            "type": "Copy",
+                            "dependsOn": [],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 1,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "typeProperties": {
+                                "source": {
+                                    "type": "BinarySource",
+                                    "storeSettings": {
+                                        "type": "HttpReadSettings",
+                                        "requestMethod": "GET"
+                                    },
+                                    "formatSettings": {
+                                        "type": "BinaryReadSettings"
+                                    },
+                                    "datasetSettings": {
+                                        "annotations": [],
+                                        "type": "Binary",
+                                        "typeProperties": {
+                                            "location": {
+                                                "type": "HttpServerLocation",
+                                                "relativeUrl": {
+                                                    "value": "@concat('yellow_tripdata_', item(), '.parquet')",
+                                                    "type": "Expression"
+                                                }
+                                            }
+                                        },
+                                        "externalReferences": {
+                                            "connection": "a411dc41-c8e6-45d2-a217-bcee99053e6b"
+                                        }
                                     }
-                                }
-                            },
-                            "type": "Binary",
-                            "typeProperties": {
-                                "location": {
-                                    "type": "LakehouseLocation",
-                                    "fileName": "yellow_tripdata_2024-01.parquet",
-                                    "folderPath": "nyc_taxi"
-                                }
+                                },
+                                "sink": {
+                                    "type": "BinarySink",
+                                    "storeSettings": {
+                                        "type": "AzureBlobStorageWriteSettings"
+                                    },
+                                    "datasetSettings": {
+                                        "annotations": [],
+                                        "linkedService": {
+                                            "name": "Lakehouse_Bronze",
+                                            "properties": {
+                                                "annotations": [],
+                                                "type": "Lakehouse",
+                                                "typeProperties": {
+                                                    "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a",
+                                                    "artifactId": "33b93b7e-0899-43c6-81a8-654bc740aa32",
+                                                    "rootFolder": "Files"
+                                                }
+                                            }
+                                        },
+                                        "type": "Binary",
+                                        "typeProperties": {
+                                            "location": {
+                                                "type": "LakehouseLocation",
+                                                "fileName": {
+                                                    "value": "@concat('yellow_tripdata_', item(), '.parquet')",
+                                                    "type": "Expression"
+                                                },
+                                                "folderPath": "nyc_taxi"
+                                            }
+                                        }
+                                    }
+                                },
+                                "enableStaging": false
                             }
                         }
-                    },
-                    "enableStaging": false
+                    ]
                 }
             }
         ],
+        "parameters": {
+            "months_list": {
+                "type": "Array",
+                "defaultValue": [
+                    "2024-01",
+                    "2024-02",
+                    "2024-03"
+                ]
+            }
+        },
         "lastModifiedByObjectId": "04603a60-6b90-45d4-8e83-616ed8be73a1",
-        "lastPublishTime": "2026-11-09T20:52:22Z"
+        "lastPublishTime": "2026-11-22T22:56:10Z"
     }
 }

@@ -1,0 +1,12 @@
+# Jupyter / notebook artifacts
+.ipynb_checkpoints/
+.jupyter/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Local secrets and environment configuration
+.env
+.env.*
+!.env.example

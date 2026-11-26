@@ -95,9 +95,32 @@
                     "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a",
                     "sessionTag": "silver_batch"
                 }
+            },
+            {
+                "name": "Ingest_NYC_Zones",
+                "type": "TridentNotebook",
+                "dependsOn": [
+                    {
+                        "activity": "Run_FX_Ingest",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "typeProperties": {
+                    "notebookId": "05edf21e-ff0c-48cd-ab47-b59c1421d5be",
+                    "workspaceId": "2f59ccc2-e9d6-44b5-8c0c-1bdbf1fe148a"
+                }
             }
         ],
         "lastModifiedByObjectId": "04603a60-6b90-45d4-8e83-616ed8be73a1",
-        "lastPublishTime": "2026-11-19T19:40:38Z"
+        "lastPublishTime": "2026-11-22T21:52:54Z"
     }
 }
