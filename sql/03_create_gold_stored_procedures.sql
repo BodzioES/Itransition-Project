@@ -1,4 +1,4 @@
--- 1. Procedura ładująca tabele wymiarów warstwy Gold
+-- 1. Procedure loading the Gold-layer dimension tables
 CREATE OR ALTER PROCEDURE dbo.usp_load_gold_dimensions
 AS
 BEGIN
@@ -56,7 +56,7 @@ BEGIN
 END;
 GO
 
--- 2. Procedura ładująca główną tabelę faktów warstwy Gold
+-- 2. Procedure loading the main Gold-layer fact table
 CREATE OR ALTER PROCEDURE dbo.usp_load_gold_fact_taxi
 AS
 BEGIN

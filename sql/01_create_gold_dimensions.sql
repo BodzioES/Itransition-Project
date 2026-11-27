@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS dbo.dim_date;
 DROP TABLE IF EXISTS dbo.dim_gdp_yearly;
 DROP TABLE IF EXISTS dbo.dim_air_quality_sensors;
 
--- 1. Wymiar czasu (wspólny dla przejazdów taksówek oraz notowań walutowych)
+-- 1. Date dimension (shared by taxi trips and FX rate observations)
 CREATE TABLE dbo.dim_date AS
 WITH all_dates AS (
     SELECT DISTINCT pickup_date AS full_date
@@ -25,7 +25,7 @@ SELECT
     CASE WHEN DATEPART(WEEKDAY, full_date) IN (1, 7) THEN 1 ELSE 0 END AS is_weekend
 FROM all_dates;
 
--- 2. Wymiar makroekonomiczny (roczne PKB USA)
+-- 2. Macro-economic dimension (annual US GDP)
 CREATE TABLE dbo.dim_gdp_yearly AS
 SELECT
     year AS gdp_year,
@@ -36,7 +36,7 @@ SELECT
     gdp_usd
 FROM [Lakehouse_Silver].[dbo].[gdp_silver];
 
--- 3. Wymiar stacji i sensorów jakości powietrza
+-- 3. Air-quality station and sensor dimension
 CREATE TABLE dbo.dim_air_quality_sensors AS
 SELECT
     sensor_id,
