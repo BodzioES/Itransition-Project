@@ -209,6 +209,7 @@ dimension documents which parameters the NYC stations report.*
 ├── notebooks/      # 9 PySpark notebooks: ingest_* (Bronze) and transform_* (Silver) + DQ gate
 ├── pipelines/      # 5 pipeline definitions, incl. pl_master_e2e
 ├── sql/            # 01–05: dimensions, facts, stored procedures, Gold refresh
+├── dataflows/      # Dataflow Gen2 (Power Query M): df_ingest_fx_ecb – reference ECB ingestion
 ├── docs/
 │   ├── data_dictionary.md
 │   ├── governance.md

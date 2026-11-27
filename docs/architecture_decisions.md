@@ -34,6 +34,33 @@ three APIs:
 Spark session start-up per notebook. In exchange, API quirks are handled deterministically and the
 whole pipeline is reviewable like application code.
 
+### Dataflow Gen2 reference implementation (ECB FX)
+
+To show that the Dataflow Gen2 route works as well, the ECB source is **also** ingested by a
+Dataflow Gen2, `df_ingest_fx_ecb`, as a standalone reference implementation.
+
+| Item | Value |
+|------|-------|
+| Dataflow | `df_ingest_fx_ecb` (query `fx_usd_eur_dataflow`) |
+| Source | ECB CSV (`EXR/D.USD.EUR.SP00.A`), anonymous Web connector |
+| Steps | promote headers → keep 6 columns → set types with the **`en-US`** culture → rename to snake_case → drop empty/non-positive rates → add `ingested_at_utc` |
+| Destination | `Lakehouse_Bronze` / `dbo` / **`fx_usd_eur_bronze_dataflow`**, update method **Replace** |
+| Output | 7 columns: `rate_date`, `currency`, `currency_denom`, `frequency`, `exchange_rate`, `obs_status`, `ingested_at_utc` |
+| Source code | [`dataflows/df_ingest_fx_ecb.pq`](../dataflows/df_ingest_fx_ecb.pq) (Power Query M) |
+
+* **Culture matters.** With a Polish locale the default type detection read rates such as `1.1789`
+  as dates (`1.01.1789`). Typing the columns explicitly with the `en-US` culture fixes this; the
+  same issue does not exist in PySpark, where `cast("double")` is locale-independent.
+* **Isolation by design.** The dataflow writes to its **own** table and is **not** part of
+  `pl_master_e2e`, so the production `fx_usd_eur_bronze` table (written by `nb_ingest_fx`) and the
+  nightly load are untouched. Both tables can be compared side by side in Bronze.
+* **Conclusion.** For a flat CSV such as ECB, Dataflow Gen2 is a good, low-code fit. For OpenAQ
+  (rate limits, nested JSON) the notebook approach above remains the better choice.
+
+![Dataflow Gen2 df_ingest_fx_ecb in the Power Query editor with applied steps and the Lakehouse destination](screenshots/dataflow_gen2_editor.png)
+
+![Output table fx_usd_eur_bronze_dataflow in Lakehouse_Bronze with 7 columns](screenshots/dataflow_gen2_output.png)
+
 ---
 
 ## b) NYC Taxi scoped to Q1 2024, with a fully parameterised pipeline
