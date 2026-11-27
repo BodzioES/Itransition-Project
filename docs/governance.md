@@ -44,8 +44,8 @@ Rules that keep this model auditable:
 
 * Row-level and object-level security, if ever needed, belong in the semantic model
   (`UrbanAnalytics_SemanticModel`), not duplicated per table.
-* Service principals used for scheduled runs are scoped to this workspace only — no tenant-wide
-  permissions (see §3.1 for the target state).
+* When service principals are introduced (see §3.1), they will be scoped to this workspace only —
+  no tenant-wide permissions.
 * People join and leave a project by role assignment; individual table grants are avoided.
 
 ### 2.2 No personal data (PII)
