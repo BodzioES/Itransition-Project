@@ -63,8 +63,9 @@ Each weather hour is enriched in PySpark before it is written:
 | `taxi_trips`, `taxi_avg_fare_usd`, `taxi_revenue_usd`, `taxi_avg_duration_min` | `nyc_taxi_silver` | hourly aggregates joined on local date + local hour |
 | `pm25_daily_avg_ugm3` | `openaq_measurements_silver` | city-wide daily PM2.5 joined on local date |
 
-Result: **2 184 rows, 2 179 of them with taxi data** (the few hours without a match are night hours
-around the DST change).
+Result: **2 184 rows, 2 179 of them with taxi data.** The 5 unmatched hours are
+2024-01-01 00:00–04:00 UTC, which is still 2023-12-31 19:00–23:00 in New York, i.e. before the
+start of the taxi data (Q1 2024 in local time).
 
 ---
 
@@ -178,13 +179,24 @@ nyc_weather_hourly
 
 ### Why a Fabric Real-Time Dashboard instead of Grafana
 
-The requirement suggests Grafana as an example ("e.g. Grafana"). Connecting Grafana Cloud to the
-Eventhouse requires an Entra ID **App Registration** (service principal) for the Azure Data Explorer
-data source, and creating app registrations is not permitted for this account in the tenant (HTTP
-401 in the Azure portal). The dashboard was therefore built natively in Fabric on the same
-time-series database with the same KQL queries. With an app registration available, the
-queries above can be reused 1:1 in Grafana's Azure Data Explorer data source (replacing the time
-filter with `$__timeFilter(timestamp_utc)`).
+The requirement suggests Grafana only as an example ("e.g. Grafana"), so any dashboard on top of the
+time-series database satisfies it. Grafana was the first choice: a Grafana Cloud stack was created
+without problems. The blocker was on the Azure side. Grafana's Azure Data Explorer data source
+(which is how Grafana reads a Fabric Eventhouse) authenticates with an Entra ID **App Registration**
+(service principal), and the account used for this project has **no active Azure subscription or
+licence that allows creating one** — the project runs on a Fabric Trial only, and the Azure portal
+returned **HTTP 401 with no subscription attached** when opening App registrations.
+
+The dashboard was therefore built natively in Fabric as a **Real-Time Dashboard** on the same
+Eventhouse, with the same KQL queries. This keeps the module inside the existing licence, needs no
+extra credentials or secrets, and the dashboard lives next to the data it reads.
+
+**Moving to Grafana later** requires no change to the data or the ingestion job:
+1. create an App Registration and grant it read access to the database
+   (`.add database NYC_Weather_Eventhouse viewers ('aadapp=<client-id>;<tenant-id>')`),
+2. add the Azure Data Explorer data source in Grafana with the Eventhouse Query URI,
+3. reuse the four KQL queries above 1:1, adding `| where $__timeFilter(timestamp_utc)` as the
+   time filter.
 
 ---
 
