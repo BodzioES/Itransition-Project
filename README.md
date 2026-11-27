@@ -17,6 +17,7 @@ orchestrated by one master pipeline, `pl_master_e2e`.
 | **[docs/data_dictionary.md](docs/data_dictionary.md)** | Column-by-column dictionary of all eight Gold tables with exact warehouse types and keys |
 | **[docs/governance.md](docs/governance.md)** | Target governance policy: RBAC, PII/classification, audit-log retention, secrets |
 | **[docs/architecture_decisions.md](docs/architecture_decisions.md)** | Why PySpark instead of Dataflow Gen2, data-scope limits, the DQ gate, and how to add a source |
+| **[integrations/weather_timeseries/README.md](integrations/weather_timeseries/README.md)** | Additional integration: Open-Meteo weather enriched with taxi and PM2.5 data, loaded by a scheduled job into a KQL Eventhouse time-series database, with a Real-Time Dashboard |
 
 ---
 
@@ -213,6 +214,8 @@ dimension documents which parameters the NYC stations report.*
 │   ├── governance.md
 │   ├── architecture_decisions.md
 │   └── screenshots/            # lineage, run history, schedule, DQ log, warehouse tree, report
+├── integrations/
+│   └── weather_timeseries/     # additional module: weather → Eventhouse (KQL) → Real-Time Dashboard
 ├── reports/UrbanAnalytics_Dashboard.pdf
 ├── .gitignore
 └── README.md
